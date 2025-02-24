@@ -6,5 +6,4 @@
 #Mozart
 #Spartak Office Shoes
 #Vojvodina
-#Dunav Stari Banovc
-
+#Dunav Stari Banovci
