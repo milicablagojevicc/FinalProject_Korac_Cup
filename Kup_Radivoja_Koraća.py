@@ -3,10 +3,11 @@ import random
 
 def choose_team(teams):
     """
-    Allows the user to choose a team from the list of available teams.
+    Allows the user to choose a team out of the four qualified
 
-    Args: teams (list): List of team objects.
-    Returns: team: The chosen team object.
+    Args: teams: List of teams
+    Returns: team: The chosen team
+    Enumerate function used to label teams by number, make choosing easier
     """
     print("\nQualified teams:")
     for i, team in enumerate(teams, 1):
@@ -21,18 +22,14 @@ def choose_team(teams):
         except ValueError:
             print("Please enter a valid number.")
 
-
 def choose_players(team):
     """
-    Allows the user to choose 5 players from the selected team.
+    Allows the user to choose 5 players from their chosen team
 
-    Args:
-        team: The team object from which players are chosen.
-
-    Returns:
-        list: List of 5 chosen player objects.
+    Args: team: The team from which players are chosen
+    Returns: list: List of 5 chosen players
     """
-    print(f"\nChoose 5 players for {team.name}:")
+    print(f"\nChoose your starting five for {team.name}:")
     for i, player in enumerate(team.players, 1):
         print(f"{i}. {player.name} (Rating: {player.rating})")
 
@@ -43,7 +40,7 @@ def choose_players(team):
             if 1 <= choice <= len(team.players) and team.players[choice - 1] not in chosen_players:
                 chosen_players.append(team.players[choice - 1])
             else:
-                print("Invalid choice or player already selected. Please try again.")
+                print("Invalid number chosen / player already selected. Choose another number.")
         except ValueError:
             print("Please enter a valid number.")
 
@@ -52,48 +49,39 @@ def choose_players(team):
 
 def calculate_team_score(players):
     """
-    Calculates the average rating of a team based on the chosen players.
+    Calculates the average rating of a team based on the mean score of chosen players
 
-    Args:
-        players (list): List of player objects.
-
-    Returns:
-        float: The average rating of the team.
+    Args: players: List of players
+    Returns: float: The average team rating
     """
     return sum(player.rating for player in players) / len(players)
 
 
 def generate_player_stats(player):
     """
-    Generates random stats for a player based on their rating.
+    Generates random stats for a player based on their rating (but reasonable within bounds of European basketball)
 
-    Args:
-        player: The player object for which stats are generated.
-
-    Returns:
-        dict: Dictionary containing the player's stats (Points, Rebounds, Assists, Steals, Blocks).
+    Args: player: The player for which stats are generated
+    Returns: dict: Dictionary containing the mian five player stats (Points, Rebounds, Assists, Steals, Blocks).
     """
     base = player.rating
     return {
-        "Points": random.randint(max(0, base - 20), base - 10),
-        "Rebounds": random.randint(max(0, base - 40), base - 10),
-        "Assists": random.randint(max(0, base - 40), base - 10),
+        "Points": random.randint(max(0, base - 80), base - 60),
+        "Rebounds": random.randint(max(0, base - 80), base - 65),
+        "Assists": random.randint(max(0, base - 80), base - 70),
         "Steals": random.randint(0, max(1, (base - 50) // 10)),
         "Blocks": random.randint(0, max(1, (base - 50) // 10))
     }
 
 
-def calculate_total_team_score(player_stats):
+def calculate_total_points(stats_list):
     """
-    Calculates the total score of a team based on player stats.
+    Calculates the total points scored by a team.
 
-    Args:
-        player_stats (list): List of dictionaries containing player stats.
-
-    Returns:
-        int: The total score of the team.
+    Args: stats_list (list): List of dictionaries containing player stats.
+    Returns: int: The total points scored by the team.
     """
-    return sum(sum(stats.values()) for stats in player_stats)
+    return sum(stats["Points"] for stats in stats_list)
 
 
 def ensure_higher_score(winner, loser, winner_stats, loser_stats):
@@ -103,15 +91,76 @@ def ensure_higher_score(winner, loser, winner_stats, loser_stats):
     Args:
         winner: The winning team.
         loser: The losing team.
-        winner_stats (list): List of stats for the winning team's players.
-        loser_stats (list): List of stats for the losing team's players.
+        winner_stats (list): List of stats for winning team players
+        loser_stats (list): List of stats for losing team players
 
-    Returns:
-        tuple: Tuple containing the adjusted stats for both teams.
+    Returns: tuple: Tuple containing the adjusted stats for both teams and showing if adjustments were made
     """
-    winner_total = sum(sum(stats.values()) for stats in winner_stats)
-    loser_total = sum(sum(stats.values()) for stats in loser_stats)
+    winner_total = calculate_total_points(winner_stats)
+    loser_total = calculate_total_points(loser_stats)
 
+    adjusted = False
     if winner_total <= loser_total:
+        # Adjust the stats to ensure the winner has more points
         adjustment = loser_total - winner_total + 1
-    else
+        for stats in winner_stats:
+            stats["Points"] += adjustment // len(winner_stats)
+            if adjustment % len(winner_stats) > 0:
+                stats["Points"] += 1
+                adjustment -= len(winner_stats)
+        adjusted = True
+
+    return winner_stats, loser_stats, adjusted
+
+def main():
+    """
+    Main function to run the Korac Cup simulator.
+    """
+    print("Welcome to the Korac Cup Simulator!")
+
+    team1 = choose_team(teams)
+    remaining_teams = [team for team in teams if team != team1]
+    team2 = choose_team(remaining_teams)
+
+    players1 = choose_players(team1)
+    players2 = choose_players(team2)
+
+    score1 = calculate_team_score(players1)
+    score2 = calculate_team_score(players2)
+
+    print(f"\n{team1.name} Score: {score1:.2f}")
+    print(f"{team2.name} Score: {score2:.2f}")
+
+    winner = team1 if score1 > score2 else team2
+    loser = team2 if winner == team1 else team1
+    print(f"\n{winner.name} wins!")
+
+    print("\nPlayer Stats:")
+    winner_stats = []
+    loser_stats = []
+
+    for team, players, stats_list in [(winner, players1, winner_stats), (loser, players2, loser_stats)]:
+        print(f"\n{team.name}:")
+        for player in players:
+            stats = generate_player_stats(player)
+            stats_list.append(stats)
+            print(f"{player.name}: {stats}")
+
+    winner_stats, loser_stats, adjusted = ensure_higher_score(winner, loser, winner_stats, loser_stats)
+
+    winner_total = calculate_total_points(winner_stats)
+    loser_total = calculate_total_points(loser_stats)
+    print(f"\nTotal Points - {winner.name}: {winner_total}")
+    print(f"Total Points - {loser.name}: {loser_total}")
+
+    # Print adjusted stats if necessary
+    if adjusted:
+        print("\nAdjusted Player Stats to Ensure Winner Has More Points:")
+        for team, players, stats_list in [(winner, players1, winner_stats), (loser, players2, loser_stats)]:
+            print(f"\n{team.name}:")
+            for player, stats in zip(players, stats_list):
+                print(f"{player.name}: {stats}")
+
+
+if __name__ == "__main__":
+    main()
