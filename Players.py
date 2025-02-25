@@ -11,8 +11,8 @@ class Team:
         self.players = players
 
 partizan_players = [
-Player("Bogdan Bogdanovic", 88), Player("Aleksandar Djordjevic", 87),
-Player("Predrag Danilovic", 86), Player("Vlade Divac", 85), Player("Miroslav Beric", 82),
+Player("Bogdan Bogdanovic", 92), Player("Aleksandar Djordjevic", 89),
+Player("Predrag Danilovic", 89), Player("Vlade Divac", 88), Player("Miroslav Beric", 82),
 Player("Milos Vujanic", 83), Player("Ivo Nakic", 84), Player("Dusan Kecman", 83),
 Player("Zeljko Rebraca", 84), Player("Sasa Obradovic", 86), Player("Novica Velickovic", 84),
 Player("Dejan Milojevic", 85)
