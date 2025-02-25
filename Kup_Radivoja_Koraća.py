@@ -1,5 +1,6 @@
 from Players import teams
 import random
+from datetime import datetime
 
 def choose_team(teams):
     """
@@ -117,6 +118,60 @@ def ensure_higher_score(winner, loser, winner_stats, loser_stats):
 
     return winner_stats, loser_stats, adjusted
 
+
+def conduct_interviews(winner, loser, winner_stats, loser_stats):
+    """
+          Conducts post-game interviews with players from the winning and losing teams
+          Args:
+              winner (Team): The winning team
+              loser (Team): The losing team
+              winner_stats (list): List of dictionaries containing stats for each player in the winning team
+              loser_stats (list): List of dictionaries containing stats for each player in the losing team
+          Returns:
+              None. Prints the interview responses to the console
+          """
+    print("\nPost-Game Interviews:")
+    from Interviews import interview_responses
+
+    winner_high_scorer = max(zip(winner.players, winner_stats), key=lambda x: x[1]["Points"])
+    print(f"\n{winner_high_scorer[0].name} ({winner.name} - {winner_high_scorer[1]['Points']} points):")
+    print(f'"{random.choice(interview_responses["winner"])}"')
+    print(f'"{random.choice(interview_responses["high_scorer"])}"')
+
+    # Interview losing team's player
+    loser_interviewee = random.choice(list(zip(loser.players, loser_stats)))
+    print(f"\n{loser_interviewee[0].name} ({loser.name} - {loser_interviewee[1]['Points']} points):")
+    print(f'"{random.choice(interview_responses["loser"])}"')
+
+
+def store_game_results(winner, loser, winner_stats, loser_stats):
+    def store_game_results(winner, loser, winner_stats, loser_stats):
+        """
+        Stores the results of the game in a text file named 'game_results.txt'
+        Args:
+            winner (Team): The winning team
+            loser (Team): The losing team
+            winner_stats (list): List of dictionaries containing stats for each player in the winning team
+            loser_stats (list): List of dictionaries containing stats for each player in the losing team
+
+        Returns:
+            None. Simply writes to a file and prints a confirmation message to the console
+        """
+
+    with open("game_results.txt", "a") as file:
+        file.write(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        file.write(f"Winner: {winner.name}\n")
+        file.write(f"Loser: {loser.name}\n")
+        file.write(f"Score: {sum(player['Points'] for player in winner_stats)} - {sum(player['Points'] for player in loser_stats)}\n")
+        file.write("Player Stats:\n")
+        for team, stats in [(winner, winner_stats), (loser, loser_stats)]:
+            file.write(f"{team.name}:\n")
+            for player, stat in zip(team.players, stats):
+                file.write(f"  {player.name}: {stat}\n")
+        file.write("\n")
+    print("Game results have been stored in 'game_results.txt'")
+
+
 def main():
     """
     Main function to run the Korac Cup simulator:
@@ -166,6 +221,11 @@ def main():
             for player, stats in zip(players, stats_list):
                 print(f"{player.name}: {stats}")
 
+    conduct_interviews(winner, loser, winner_stats, loser_stats)
+    store_game_results(winner, loser, winner_stats, loser_stats)
+
+    print("Thanks for playing the Radivoje Korac Cup Simulator!")
+    print("You can try to play again with different teams or players!")
 
 if __name__ == "__main__":
     main()
