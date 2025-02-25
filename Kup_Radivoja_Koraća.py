@@ -67,7 +67,7 @@ def generate_player_stats(player):
     base = player.rating
     return {
         "Points": random.randint(max(0, base - 80), base - 60),
-        "Rebounds": random.randint(max(0, base - 80), base - 65),
+        "Rebounds": random.randint(max(0, base - 80), base - 70),
         "Assists": random.randint(max(0, base - 80), base - 70),
         "Steals": random.randint(0, max(1, (base - 50) // 10)),
         "Blocks": random.randint(0, max(1, (base - 50) // 10))
@@ -98,6 +98,11 @@ def ensure_higher_score(winner, loser, winner_stats, loser_stats):
     """
     winner_total = calculate_total_points(winner_stats)
     loser_total = calculate_total_points(loser_stats)
+    """
+    Since I want to base the game outcome on individual players
+    BUT basketball is played based on points
+    I had to adjust the randomised player scores so that a losing team never has more total points
+    """
 
     adjusted = False
     if winner_total <= loser_total:
@@ -114,7 +119,7 @@ def ensure_higher_score(winner, loser, winner_stats, loser_stats):
 
 def main():
     """
-    Main function to run the Korac Cup simulator.
+    Main function to run the Korac Cup simulator:
     """
     print("Welcome to the Korac Cup Simulator!")
 

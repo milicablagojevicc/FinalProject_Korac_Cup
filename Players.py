@@ -13,14 +13,14 @@ class Team:
 partizan_players = [
 Player("Bogdan Bogdanovic", 93), Player("Aleksandar Djordjevic", 90),
 Player("Predrag Danilovic", 90), Player("Vlade Divac", 89), Player("Miroslav Beric", 85),
-Player("Milos Vujanic", 83), Player("Ivo Nakic", 84), Player("Dusan Kecman", 83),
-Player("Zeljko Rebraca", 84), Player("Sasa Obradovic", 86), Player("Novica Velickovic", 84),
-Player("Dejan Milojevic", 85)
+Player("Milos Vujanic", 88), Player("Ivo Nakic", 86), Player("Dusan Kecman", 85),
+Player("Zeljko Rebraca", 84), Player("Sasa Obradovic", 88), Player("Novica Velickovic", 86),
+Player("Dejan Milojevic", 89)
 ]
 
 zvezda_players = [
 Player("Nebojsa Popovic", 85), Player("Bora Stankovic", 83),
-Player("Radomir Saper", 86), Player("Milan Bjelogrlic", 84), Player("Radivoj Korac", 88),
+Player("Radomir Saper", 86), Player("Milan Bjelogrlic", 84), Player("Radivoj Korac", 90),
 Player("Ranko Zeravica", 87), Player("Igor Rakocevic", 86), Player("Filip Petrusev", 83),
 Player("Stefan Jovic", 82), Player("Nikola Kalinic", 83), Player("Milos Teodosic", 85),
 Player("Nemanja Nedovic", 85)
