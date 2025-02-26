@@ -130,7 +130,7 @@ def main():
     """
     Main function to run the Korac Cup simulator:
     """
-    print("Welcome to the Korac Cup Simulator!")
+    print("Welcome to the Amended Korac Cup Simulator!")
 
     team1 = choose_team(teams)
     remaining_teams = [team for team in teams if team != team1]
@@ -171,3 +171,5 @@ def main():
     print("Thanks for playing the Radivoje Korac Cup Simulator!")
     print("You can try to play again with different teams or players!")
 
+if __name__ == "__main__":
+    main()
